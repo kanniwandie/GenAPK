@@ -52,7 +52,9 @@ Modification requirements (clear instructions on changes needed)
 Expected Output:
 Updated .java code with modifications based on the request.
 
-Updated .xml code reflecting UI changes.
+Updated .xml code reflecting UI changes, updated themes, or new layouts, or manifests.
+
+DO NOT generate any binary files.
 
 Brief explanation of the changes made and how they improve the app.
     """)
@@ -130,10 +132,8 @@ Manifest file:
 # Example usage:
 if __name__ == "__main__":
     user_intent = """
-I want to create a new Android timer app that allows users to set timers. The app should have a simple and intuitive interface with the following features:
-- Users can start, pause, and reset timers, and can set it to a custom duration of their choosing.
-- The app should provide visual and audio notifications when a timer expires.
-- Users can save and load timer configurations.
+    Build me a calculator app android
+
     """
 
     result = generate_android_app(user_intent)
