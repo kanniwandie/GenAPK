@@ -3,6 +3,7 @@ import streamlit as st
 import pathlib
 import time
 import shutil
+from build import build_gradle_project
 
 st.set_page_config(
     page_title="Code",
@@ -70,7 +71,13 @@ def main():
         with cols[2]:
             reject_button = st.button("Reject", type="secondary")
 
-        # TODO: Handle accept_button
+        if accept_button:
+            if selected_file and os.path.isfile(selected_file):
+                st.write("Building Gradle project...")
+                logs = build_gradle_project(os.path.dirname(selected_file))  # Call the build function
+                st.text_area("Build Logs", logs, height=300)  # Display logs in a text box
+            else:
+                st.warning("File is invalid.")
 
         if reject_button:
             try:
