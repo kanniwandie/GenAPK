@@ -1,0 +1,16 @@
+files:
+    gradle:
+        - build.gradle.kts
+        - gradle.properties
+        - settings.gradle.kts
+    app:
+        logic:
+            - app/src/main/java/dev/czlucius/myapp/MainActivity.java
+        manifest:
+            - app/src/main/AndroidManifest.xml
+        layout:
+            - app/src/main/res/layout/activity_main.xml
+        themes:
+            - app/src/main/res/values/themes.xml
+            - app/src/main/res/values/colors.xml
+
