@@ -1,135 +1,138 @@
 import openai
-import re
 import yaml
 import os
-
 from schema import Project
-
-# Configure API key
 base_url = "https://generativelanguage.googleapis.com/v1beta/openai/"
 client = openai.Client(api_key="AIzaSyB4SxHdIlJtX9arqwS2xMVFk2InXiGcIGY", base_url=base_url)
 
+def generate_android_app(user_intent):
+    global client
+    """
+    Generate Android app code based on the user's intent.
 
-system = ("""
-You are an AI assistant specializing in Android app development. Your task is to generate and improve an Android app’s UI and functionality based on the provided .java and .xml files above. The modifications should align with the user’s needs while ensuring a visually appealing and well-structured design.
+    Args:
+        user_intent (str): The user's description of what they want to build
 
-Requirements:
+    Returns:
+        structured_out: The parsed response containing the generated files
+    """
+    # Configure API key
 
-Refer to the original .java and .xml code above to make precise and context-aware modifications.
+    system = ("""
+    You are an AI assistant specializing in Android app development. Your task is to generate and improve an Android app's UI and functionality based on the provided .java and .xml files above. The modifications should align with the user's needs while ensuring a visually appealing and well-structured design.
 
-Ensure an aesthetically pleasing UI with proper spacing, alignment, and readability. No elements should overlap.
+    Requirements:
 
-Follow Android best practices, maintaining modularity, efficiency, and proper resource management.
+    Refer to the original .java and .xml code above to make precise and context-aware modifications.
 
-Comment on significant changes to improve code readability and maintainability.
+    Ensure an aesthetically pleasing UI with proper spacing, alignment, and readability. No elements should overlap.
 
-Use Material Design components where applicable to enhance the user experience.
+    Follow Android best practices, maintaining modularity, efficiency, and proper resource management.
 
-Do not remove existing functionalities unless explicitly requested.
+    Comment on significant changes to improve code readability and maintainability.
 
-Generate only the modified .java and .xml sections, ensuring they integrate seamlessly with the existing code.
+    Use Material Design components where applicable to enhance the user experience.
 
-User Input Format:
-Existing .java file(s) (code provided before the prompt)
-Existing .xml layout file(s) (code provided before the prompt)
-Existing .xml theme file(s) (if applicable)
+    Do not remove existing functionalities unless explicitly requested.
 
-Modification requirements (clear instructions on changes needed)
+    Generate only the modified .java and .xml sections, ensuring they integrate seamlessly with the existing code.
 
-Expected Output:
-Updated .java code with modifications based on the request.
+    User Input Format:
+    Existing .java file(s) (code provided before the prompt)
+    Existing .xml layout file(s) (code provided before the prompt)
+    Existing .xml theme file(s) (if applicable)
 
-Updated .xml code reflecting UI changes.
+    Modification requirements (clear instructions on changes needed)
 
-Brief explanation of the changes made and how they improve the app.
-""")
+    Expected Output:
+    Updated .java code with modifications based on the request.
 
-template_structure= {}
-with open("template/template.yaml", "r") as stream:
-    try:
-        template_structure = yaml.safe_load(stream)
-    except yaml.YAMLError as exc:
-        print(exc)
+    Updated .xml code reflecting UI changes.
 
-if "files" not in template_structure:
-    raise Exception("Invalid template structure. 'files' key is missing.")
-files = template_structure["files"]
-app = files["app"]
+    Brief explanation of the changes made and how they improve the app.
+    """)
 
-gradle = files["gradle"]
-logic = app["logic"]
-manifest = app["manifest"]
-layout = app["layout"]
-themes = app["themes"]
+    template_structure= {}
+    with open("template/template.yaml", "r") as stream:
+        try:
+            template_structure = yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
 
+    if "files" not in template_structure:
+        raise Exception("Invalid template structure. 'files' key is missing.")
+    files = template_structure["files"]
+    app = files["app"]
 
+    gradle = files["gradle"]
+    logic = app["logic"]
+    manifest = app["manifest"]
+    layout = app["layout"]
+    themes = app["themes"]
 
+    user_msg = f"""
+    I want to perform these:
+    {user_intent}
 
-user_intent = """
-I want to create a new Android timer app that allows users to set timers. The app should have a simple and intuitive interface with the following features:
-- Users can start, pause, and reset timers, and can set it to a custom duration of their choosing.
-- The app should provide visual and audio notifications when a timer expires.
-- Users can save and load timer configurations.
-"""
+    Here are important files in my project:
+    """
 
-user_msg = f"""
-I want to perform these:
-{user_intent}
+    def put_files_in_prompt(listing: list):
+        nonlocal user_msg
+        for fn in listing:
+            file = os.path.join("template", "MyApp", fn)
+            with open(file, "r") as f:
+                contents = f.read()
+            user_msg += f"""
+    - {fn}:
+    ```
+    {contents}
+    ```
+    """
 
-Here are important files in my project:
-"""
+    user_msg += """
+    Java logic files:
+    """
+    put_files_in_prompt(logic)
 
+    user_msg += """
+    XML layout files:
+    """
+    put_files_in_prompt(layout)
 
+    user_msg += """
+    XML theme files:
+    """
+    put_files_in_prompt(themes)
 
-def put_files_in_prompt(listing: list):
-    global user_msg
-    for fn in listing:
-        file = os.path.join("template", "MyApp", fn)
-        with open(file, "r") as f:
-            contents = f.read()
-        user_msg += f"""
-- {fn}:
-```
-{contents}
-```
-"""
+    response = client.beta.chat.completions.parse(
+        model="gemini-2.0-flash",
+        messages=[
+            {"role": "system", "content": system},
+            {"role": "user", "content": user_msg},
+        ],
+        response_format=Project,
+    )
 
+    structured_out = response.choices[0].message.parsed
+    return structured_out
 
+# Example usage:
+if __name__ == "__main__":
+    user_intent = """
+    I want to create a new Android timer app that allows users to set timers. The app should have a simple and intuitive interface with the following features:
+    - Users can start, pause, and reset timers, and can set it to a custom duration of their choosing.
+    - The app should provide visual and audio notifications when a timer expires.
+    - Users can save and load timer configurations.
+    """
 
+    result = generate_android_app(user_intent)
 
-user_msg += """
-Java logic files:
-"""
-put_files_in_prompt(logic)
-
-user_msg += """
-XML layout files:
-"""
-put_files_in_prompt(layout)
-
-user_msg += """
-XML theme files:
-"""
-put_files_in_prompt(themes)
-
-# print("Prompt", user_msg)
-
-
-
-
-response = client.beta.chat.completions.parse(
-    model="gemini-2.0-flash",
-    messages=[
-        {"role": "system", "content": system},
-        {"role": "user", "content": user_msg},
-    ],
-    response_format=Project,
-)
-structured_out = response.choices[0].message.parsed
-
-s_files = structured_out.files
-for file in s_files:
-    print(file.relative_path)
-    print(file.content)
-    # with open(file.relative_path, "w") as f:
-    #     f.write(file.content)
+    # Display the results
+    s_files = result.files
+    for file in s_files:
+        print(file.relative_path)
+        print(file.content)
+        # If you want to write the files:
+        # with open(file.relative_path, "w") as f:
+        #     f.write(file.content)
