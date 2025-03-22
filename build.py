@@ -5,29 +5,29 @@ def build_gradle_project(project_dir):
     """
  Returns True if the build succeeds, False otherwise.
     """
+    logs = []
     try:
         # Navigate to the project directory
         os.chdir(project_dir)
 
-        print("Cleaning project...")
+        logs.append("Cleaning project...")
         clean_process = subprocess.Popen(
             ["./gradlew", "clean"],
-            stdout=subprocess.PIPE, #Logs
-            stderr=subprocess.PIPE, #Error Logs
+            stdout=subprocess.PIPE,  # Logs
+            stderr=subprocess.PIPE,  # Error Logs
             universal_newlines=True
         )
 
-        # Display logs
+        # Capture logs
         for line in clean_process.stdout:
-            print(line, end="")
+            logs.append(line.strip())
         for line in clean_process.stderr:
-            print(line, end="")
+            logs.append(line.strip())
 
         # Wait for the clean process to complete
         clean_process.wait()
 
-        # Build the debug APK
-        print("Building APK...")
+        logs.append("Building APK...")
         build_process = subprocess.Popen(
             ["./gradlew", "assembleDebug"],
             stdout=subprocess.PIPE,
@@ -35,35 +35,29 @@ def build_gradle_project(project_dir):
             universal_newlines=True
         )
 
-        # Display logs in real-time
+        # Capture logs
         for line in build_process.stdout:
-            print(line, end="")
+            logs.append(line.strip())
         for line in build_process.stderr:
-            print(line, end="")
+            logs.append(line.strip())
 
         # Wait for the build process to complete
         build_process.wait()
 
         # Check if the build succeeded
         if build_process.returncode == 0:
-            # Locate the APK file
-            apk_path = os.path.join("app", "build", "outputs", "apk", "debug", "app-debug.apk")
-            if os.path.exists(apk_path):
-                print(f"APK successfully built at: {apk_path}")
-                return True
-            else:
-                print("APK build failed. Check the logs for errors.")
-                return False
+            logs.append("Build succeeded!")
         else:
-            print("Gradle build failed. Check the logs for errors.")
-            return False
-
+            logs.append("Build failed. Check the logs for errors.")
     except FileNotFoundError:
-        print("Gradle wrapper (gradlew) not found. Ensure you're in the correct project directory.")
-        return False
+        logs.append("Gradle wrapper (gradlew) not found. Ensure you're in the correct project directory.")
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-        return False
+        logs.append(f"An unexpected error occurred: {e}")
+
+    # Return logs as a single string
+    return "\n".join(logs)
+
 if __name__ == "__main__":
     project_dir = input("Enter the project directory: ")
-    build_gradle_project(project_dir)
+    logs = build_gradle_project(project_dir)
+    print(logs)
