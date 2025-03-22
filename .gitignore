@@ -1,2 +1,3 @@
 .ropeproject/
 .env
+__pycache__

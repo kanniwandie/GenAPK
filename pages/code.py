@@ -1,9 +1,22 @@
 import os
 import streamlit as st
 import pathlib
+import time
+import shutil
+
+st.set_page_config(
+    page_title="Code",
+    page_icon="💡",
+)
+
+if "path" not in st.session_state:
+    st.warning("Code not generated yet. You will be redirected back in 3 seconds...")
+    time.sleep(3)
+    st.switch_page("pages/chat.py")
 
 # Set this to the directory you want to browse
-FILE_PATH = os.path.expanduser(".")  # Default to home directory, change as needed
+folder = st.session_state.path if "path" in st.session_state else "."
+FILE_PATH = os.path.expanduser(folder)  # Default to home directory, change as needed
 
 def get_language_from_filename(filename):
     # Extract the file extension
@@ -57,6 +70,16 @@ def main():
         with cols[2]:
             reject_button = st.button("Reject", type="secondary")
 
+        # TODO: Handle accept_button
+
+        if reject_button:
+            try:
+                shutil.rmtree(st.session_state.path)
+                st.session_state.clear()
+                st.switch_page("pages/chat.py")
+            except Exception as e:
+                st.error(f"Error deleting temp folder: {e}")
+                
         # Show file contents if a file is selected
         if selected_file and os.path.isfile(selected_file):
             try:

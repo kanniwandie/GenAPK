@@ -1,43 +1,25 @@
 import streamlit as st
-from ollama import Client
 import pandas as pd
 import numpy as np
 import time
+from transform import transform_android_app
 
 st.set_page_config(
     page_title="Chat",
-    page_icon="",
+    page_icon="🌐",
 )
 
-client = Client(
-  host= 'https://6fb7-155-69-184-252.ngrok-free.app/')
+if "path" in st.session_state:
+    st.warning("An app has been generated. Redirecting you to the code page...")
+    time.sleep(3)
+    st.switch_page("pages/code.py")
 
-if "messages" not in st.session_state:
-    st.session_state.messages = [{"role": "assistant", "content": "Start generating your project now!"}]
+with st.form("idea_form"):
+   st.write("# Plan your idea here")
+   intent = st.text_area("Your next big idea is brewing...")
+   submit = st.form_submit_button('Generate!')
 
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
-
-if prompt := st.chat_input("Insert your idea"):
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
-
-    with st.chat_message("assistant"):
-         stream = client.chat.completions.create(
-            model=st.session_state["openai_model"],
-            messages=[
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
-            ],
-            stream=True,
-        )
-    
-    assistant_response =["Hello there! How can I assist you today?" ]
-
-    for chunk in assistant_response.split():
-        full_response += chunk + " "
-        time.sleep(0.05)
-
-    st.session_state.messages.append({"role": "assistant", "content": full_response})
+if submit:
+    st.success("Generating your app...")
+    st.session_state.path = transform_android_app(intent)
+    st.switch_page("pages/code.py")
