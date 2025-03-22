@@ -24,37 +24,37 @@ def generate_android_app(user_intent):
     # Configure API key
 
     system = ("""
-    You are an AI assistant specializing in Android app development. Your task is to generate and improve an Android app's UI and functionality based on the provided .java and .xml files above. The modifications should align with the user's needs while ensuring a visually appealing and well-structured design.
+You are an AI assistant specializing in Android app development. Your task is to generate and improve an Android app's UI and functionality based on the provided .java and .xml files above. The modifications should align with the user's needs while ensuring a visually appealing and well-structured design.
 
-    Requirements:
+Requirements:
 
-    Refer to the original .java and .xml code above to make precise and context-aware modifications.
+Refer to the original .java and .xml code above to make precise and context-aware modifications.
 
-    Ensure an aesthetically pleasing UI with proper spacing, alignment, and readability. No elements should overlap.
+Ensure an aesthetically pleasing UI with proper spacing, alignment, and readability. No elements should overlap.
 
-    Follow Android best practices, maintaining modularity, efficiency, and proper resource management.
+Follow Android best practices, maintaining modularity, efficiency, and proper resource management.
 
-    Comment on significant changes to improve code readability and maintainability.
+Comment on significant changes to improve code readability and maintainability.
 
-    Use Material Design components where applicable to enhance the user experience.
+Use Material Design components where applicable to enhance the user experience.
 
-    Do not remove existing functionalities unless explicitly requested.
+Do not remove existing functionalities unless explicitly requested.
 
-    Generate only the modified .java and .xml sections, ensuring they integrate seamlessly with the existing code.
+Generate only the modified .java and .xml sections, ensuring they integrate seamlessly with the existing code.
 
-    User Input Format:
-    Existing .java file(s) (code provided before the prompt)
-    Existing .xml layout file(s) (code provided before the prompt)
-    Existing .xml theme file(s) (if applicable)
+User Input Format:
+Existing .java file(s) (code provided before the prompt)
+Existing .xml layout file(s) (code provided before the prompt)
+Existing .xml theme file(s) (if applicable)
 
-    Modification requirements (clear instructions on changes needed)
+Modification requirements (clear instructions on changes needed)
 
-    Expected Output:
-    Updated .java code with modifications based on the request.
+Expected Output:
+Updated .java code with modifications based on the request.
 
-    Updated .xml code reflecting UI changes.
+Updated .xml code reflecting UI changes.
 
-    Brief explanation of the changes made and how they improve the app.
+Brief explanation of the changes made and how they improve the app.
     """)
 
     template_structure= {}
@@ -76,10 +76,10 @@ def generate_android_app(user_intent):
     themes = app["themes"]
 
     user_msg = f"""
-    I want to perform these:
-    {user_intent}
+I want to perform these:
+{user_intent}
 
-    Here are important files in my project:
+Here are important files in my project:
     """
 
     def put_files_in_prompt(listing: list):
@@ -96,19 +96,24 @@ def generate_android_app(user_intent):
     """
 
     user_msg += """
-    Java logic files:
+Java logic files:
     """
     put_files_in_prompt(logic)
 
     user_msg += """
-    XML layout files:
+XML layout files:
     """
     put_files_in_prompt(layout)
 
     user_msg += """
-    XML theme files:
+XML theme files:
     """
     put_files_in_prompt(themes)
+
+    user_msg += """
+Manifest file:
+"""
+    put_files_in_prompt(manifest)
 
     response = client.beta.chat.completions.parse(
         model="gemini-2.0-flash",
@@ -125,10 +130,10 @@ def generate_android_app(user_intent):
 # Example usage:
 if __name__ == "__main__":
     user_intent = """
-    I want to create a new Android timer app that allows users to set timers. The app should have a simple and intuitive interface with the following features:
-    - Users can start, pause, and reset timers, and can set it to a custom duration of their choosing.
-    - The app should provide visual and audio notifications when a timer expires.
-    - Users can save and load timer configurations.
+I want to create a new Android timer app that allows users to set timers. The app should have a simple and intuitive interface with the following features:
+- Users can start, pause, and reset timers, and can set it to a custom duration of their choosing.
+- The app should provide visual and audio notifications when a timer expires.
+- Users can save and load timer configurations.
     """
 
     result = generate_android_app(user_intent)
