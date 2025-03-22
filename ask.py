@@ -2,8 +2,13 @@ import openai
 import yaml
 import os
 from schema import Project
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
 base_url = "https://generativelanguage.googleapis.com/v1beta/openai/"
-client = openai.Client(api_key="AIzaSyB4SxHdIlJtX9arqwS2xMVFk2InXiGcIGY", base_url=base_url)
+client = openai.Client(api_key=os.getenv("LLM_API_KEY"), base_url=base_url)
 
 def generate_android_app(user_intent):
     global client
