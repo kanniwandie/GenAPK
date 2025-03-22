@@ -20,19 +20,15 @@ st.markdown(
 
 🔹 Test Instantly: Deploy to Appetize for instant live testing on both iOS and Android.
 
-🔹 Share with Friends: Share your app with your friends or stakeholders instantly.
-
-🔹 Publish with Confidence: If you love it, publish the APK directly to the Play Store.
+🔹 Share with Friends: Share your app with your friends or stakeholders instantly through Appetize.
 
 **Why GenAPK?**
 
-🚀 Rare and Revolutionary: Mobile app generators are rare, and GenAPK is the only one that builds, tests, and shares apps seamlessly.
-
-💡 More Than Just Code: Unlike other generators, GenAPK doesn’t just output code—it builds the app and lets you use it right away.
+💡 More Than Just Code: Unlike other generators, GenAPK doesn’t just output code—it builds and tests the app, allowing you use it right away.
 
 🌐 Instant Sharing: Share your app with a link, no downloads or installations required.
 
-📱 Cross-Platform: Apps work for both Android and iOS, so you can reach a wider audience.
+📱 Cross-Platform: Apps work for both Android and iOS, allowing you to reach a wider audience.
 
 **For:**
 
