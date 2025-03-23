@@ -38,5 +38,8 @@ st.markdown(
 
 ✔️ Developers: Rapidly prototype and test MVPs.
 
-✔️ Hobbyists: Build and share apps with friends for fun."""  
+✔️ Hobbyists: Build and share apps with friends for fun."""
 )
+nav = st.button("Get Started")
+if nav:
+    st.switch_page("pages/chat.py")
