@@ -39,6 +39,31 @@ cd iNTUition
 pip install -r requirements.txt
 ```
 
+
+3. Install Android Studio (For Android App Projects)
+
+**Download Android Studio:**
+
+- Visit the [Android Studio website](https://developer.android.com/studio) and download the installer for your operating system.
+
+**Installation Steps:**
+
+- **Linux:**
+  - Extract the downloaded `.zip` file.
+  - Open a terminal, navigate to the extracted folder, and run:
+    ```bash
+    ./studio.sh
+    ```
+
+- **Windows:**
+  - Run the downloaded `.exe` installer and follow the installation wizard.
+
+**Initial Setup:**
+
+- Launch Android Studio.
+- Complete the setup wizard by installing the Android SDK, accepting default settings, etc.
+
+
 ## Usage
 
 ### Run the Streamlit App:
