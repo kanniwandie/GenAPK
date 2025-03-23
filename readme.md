@@ -10,7 +10,7 @@ This repository contains a Streamlit-based web application integrated with Googl
 
 ## Project Structure
 ```
-intuition2025/
+iNTUition/
 ├── pages/
 │   ├── chat.py         # Chat interface with Gemini AI
 │   ├── code.py         # Code viewer and project handler
@@ -31,7 +31,7 @@ intuition2025/
 1. Clone the repository:
 ```bash
 git clone <repo_url>
-cd intuition2025
+cd iNTUition
 ```
 
 2. Install dependencies:
