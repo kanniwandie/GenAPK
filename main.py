@@ -12,15 +12,15 @@ st.markdown(
 
 **With GenAPK you can:**
 
-🔹 App Generation:  Turn simple prompts into fully functional apps—complete with clean Java/XML files and Material Design best practices.
+🔹 Automated App Generation:  Converts simple text prompts into production-ready Java/XML code, following Material Design best practices.  
 
-🔹 End-to-End Workflow: From code generation to APK building and testing.
+🔹 End-to-End Workflow: Covers the full lifecycle: code generation, building, testing, and deployment.
 
-🔹 Build the App: Automated Gradle builds to create APKs effortlessly.
+🔹 Automated Builds: Automatically compiles and builds the app into an APK using Gradle, streamlining the process.
 
-🔹 Test Instantly: Deploy to Appetize for instant live testing on both iOS and Android.
+🔹 Instant testing and sharing: Deploys apps to Appetize for live testing on iOS & Android and generates shareable link for instant access without downloads.
 
-🔹 Share with Friends: Share your app with your friends or stakeholders instantly through Appetize.
+🔹 Integrated Hosting: The only platform that not only generates the app but also hosts it immediately, eliminating deployment friction.
 
 **Why GenAPK?**
 
