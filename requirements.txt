@@ -1,0 +1,17 @@
+# requirements.txt
+
+# Core Dependencies
+streamlit
+google-generativeai
+requests
+python-dotenv
+
+# Android & Gradle Automation
+subprocess
+shutil
+pathlib
+
+
+# Utility Dependencies
+numpy
+pandas

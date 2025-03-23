@@ -40,7 +40,9 @@ Use Material Design components where applicable to enhance the user experience.
 
 Do not remove existing functionalities unless explicitly requested.
 
-Generate only the modified .java and .xml sections, ensuring they integrate seamlessly with the existing code.
+Generate the modified sections, ensuring they integrate seamlessly with the existing code.
+Feel free to add more files as necessary.
+
 
 User Input Format:
 Existing .java file(s) (code provided before the prompt)

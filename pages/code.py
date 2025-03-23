@@ -3,7 +3,7 @@ import streamlit as st
 import pathlib
 import time
 import shutil
-from build import build_gradle_project
+from build import BuildError, build_gradle_project
 
 st.set_page_config(
     page_title="Code",
@@ -72,12 +72,33 @@ def main():
             reject_button = st.button("Reject", type="secondary")
 
         if accept_button:
-            if selected_file and os.path.isfile(selected_file):
-                st.write("Building Gradle project...")
-                logs = build_gradle_project(os.path.dirname(selected_file))  # Call the build function
-                st.text_area("Build Logs", logs, height=300)  # Display logs in a text box
-            else:
-                st.warning("File is invalid.")
+
+            st.write("Building Gradle project...")
+            try:
+                logs = build_gradle_project(FILE_PATH)  # Call the build function
+
+
+
+                # Create a placeholder for the log output
+                log_placeholder = st.empty()
+
+                # Initialize the accumulated logs
+                accumulated_logs = ""
+                # Create a text_area inside the container
+                log_display = log_placeholder.text_area("Build Logs", value="", height=300)
+
+                # Process and display each log entry
+                for log in logs:
+                    accumulated_logs += log + "\n"
+                    # Update the placeholder with all logs received so far
+                    log_placeholder.text_area("Build Logs", value=accumulated_logs, height=300)
+                st.success("Build completed successfully!")
+                st.write("You can now deploy your app.")
+                st.session_state.apk = os.path.join(FILE_PATH, "app", "build", "outputs", "apk", "debug", "app-debug.apk")
+                st.switch_page("pages/present.py")
+            except BuildError as e:
+                st.error(f"Build failed: {e}")
+                st.stop()
 
         if reject_button:
             try:
@@ -86,7 +107,7 @@ def main():
                 st.switch_page("pages/chat.py")
             except Exception as e:
                 st.error(f"Error deleting temp folder: {e}")
-                
+
         # Show file contents if a file is selected
         if selected_file and os.path.isfile(selected_file):
             try:
