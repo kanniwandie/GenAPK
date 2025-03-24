@@ -1,10 +1,6 @@
 import subprocess
 import os
 
-st.set_page_config(
-    page_title="Build",
-    page_icon="🔧",
-)
 class BuildError(Exception):
     pass
 def build_gradle_project(project_dir):
